@@ -24,11 +24,10 @@ def start_tracker(p_log):
         # the kill time and mob name, then pass to tracker
         # class to update database
         if 'Druzzil Ro tells the guild' in line:
-            print("check")
-            # kill_time = tracker.parse_time(line)
-            # mob_name = tracker.parse_mob(line)
-            #
-            # tracker.update_kill_time(mob_name, kill_time)
+            kill_time = tracker.parse_time(line)
+            mob_name = tracker.parse_mob(line)
+            
+            tracker.update_kill_time(mob_name, kill_time)
 
 
 if __name__ == "__main__":
