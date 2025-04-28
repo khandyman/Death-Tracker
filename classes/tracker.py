@@ -1,6 +1,4 @@
 import time
-import os.path
-from tkinter import filedialog
 from datetime import datetime, timedelta
 from classes.database import Database
 
