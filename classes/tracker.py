@@ -89,18 +89,21 @@ class Tracker:
         # get the respawn time from the calculate respawn method
         respawn_time = self.calculate_respawn(mob_name, kill_time)
 
-        # get the time zone of the PC the mule is logged in on
-        time_zone = datetime.now().astimezone().tzname()
-
-        # print to console, to indicate a new log file capture
-        print(f"{mob_name} | {kill_time} | {respawn_time} | {time_zone}")
-
-        # attempt to update the database, print success or
-        # failure message to console
-        if self._database.update_kill_time(mob_name, kill_time, respawn_time, time_zone):
-            kill_message = f"```Database insert of kill time for {mob_name} succeeded.```"
+        if respawn_time is False:
+            kill_message = f"No match in database for {mob_name}. Unable to proceed."
         else:
-            kill_message = f"```Database insert of kill time for {mob_name} failed.```"
+            # get the time zone of the PC the mule is logged in on
+            time_zone = datetime.now().astimezone().tzname()
+
+            # print to console, to indicate a new log file capture
+            print(f"{mob_name} | {kill_time} | {respawn_time} | {time_zone}")
+
+            # attempt to update the database, print success or
+            # failure message to console
+            if self._database.update_kill_time(mob_name, kill_time, respawn_time, time_zone):
+                kill_message = f"Database insert of kill time for {mob_name} succeeded."
+            else:
+                kill_message = f"Database insert of kill time for {mob_name} failed."
 
         print(kill_message)
 
@@ -118,6 +121,9 @@ class Tracker:
 
         # get the respawn time units of a mob from database
         mob_data = self._database.get_mob_data(mob_name)
+
+        if len(mob_data) < 1:
+            return False
 
         # convert to ints, for arithmetic
         delta_weeks = int(mob_data[0]['lockout_weeks'])
